@@ -17,10 +17,7 @@ type BingoCard struct {
 type BingoDraws []int
 
 func main() {
-	file := util.OpenFileFromArgs()
-	defer file.Close()
-
-	rows := util.ReadFile(file)
+	rows := util.ReadFileArg()
 
 	draws := ParseBingoDraws(rows[0])
 	cards := ParseBingoCards(rows[1:])

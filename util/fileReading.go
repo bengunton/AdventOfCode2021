@@ -26,3 +26,10 @@ func OpenFileFromArgs() *os.File {
 
 	return file
 }
+
+func ReadFileArg() []string {
+	file := OpenFileFromArgs()
+	defer file.Close()
+
+	return ReadFile(file)
+}
