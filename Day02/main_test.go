@@ -5,7 +5,6 @@ import (
 	"testing"
 )
 
-/*
 func TestFollowCourse(t *testing.T) {
 	start := Point{distance: 0, depth: 0}
 
@@ -18,12 +17,11 @@ func TestFollowCourse(t *testing.T) {
 	instructions := ReadInstructions(input)
 
 	end := FollowCourse(start, instructions)
-	product := end.Width * end.Height
+	product := end.distance * end.depth
 	if product != 150 {
 		t.Errorf("Expected product of 150 , got %d", product)
 	}
 }
-*/
 
 func TestReadInstructions(t *testing.T) {
 	sample, err := os.Open("sample")

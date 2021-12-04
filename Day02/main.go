@@ -30,15 +30,26 @@ func main() {
 	start := Point{0, 0}
 
 	instructions := ReadInstructions(file)
-	FollowCourse(start, instructions)
+	end := FollowCourse(start, instructions)
+
+	fmt.Printf("Product is %d", end.depth*end.distance)
 }
 
 func FollowCourse(start Point, instructions []string) Point {
-	for _, instruction := range instructions {
-		fmt.Println(instruction)
+	end := start
+	for _, row := range instructions {
+		instruction := parseInstruction(row)
+		switch instruction.command {
+		case "up":
+			end.depth -= instruction.amount
+		case "down":
+			end.depth += instruction.amount
+		case "forward":
+			end.distance += instruction.amount
+		}
 	}
 
-	return start
+	return end
 }
 
 func parseInstruction(instruction string) Instruction {
