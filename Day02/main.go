@@ -1,12 +1,12 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"io"
 	"os"
 	"strconv"
 	"strings"
+
+	"github.com/bengunton/AdventOfCode2021/util"
 )
 
 type Point struct {
@@ -34,7 +34,7 @@ func main() {
 
 	start := Submarine{Point{0, 0}, 0}
 
-	instructions := ReadInstructions(file)
+	instructions := util.ReadFile(file)
 	end := FollowAimedCourse(start, instructions)
 
 	fmt.Printf("Product is %d", end.loc.depth*end.loc.distance)
@@ -81,15 +81,4 @@ func parseInstruction(instruction string) Instruction {
 	}
 	amount, _ := strconv.Atoi(parts[1])
 	return Instruction{parts[0], amount}
-}
-
-func ReadInstructions(reader io.Reader) []string {
-	scanner := bufio.NewScanner(reader)
-	var instructions []string
-
-	for scanner.Scan() {
-		instructions = append(instructions, scanner.Text())
-	}
-
-	return instructions
 }

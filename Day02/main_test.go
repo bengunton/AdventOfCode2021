@@ -3,6 +3,8 @@ package main
 import (
 	"os"
 	"testing"
+
+	"github.com/bengunton/AdventOfCode2021/util"
 )
 
 func TestFollowSimpleCourse(t *testing.T) {
@@ -14,7 +16,7 @@ func TestFollowSimpleCourse(t *testing.T) {
 	}
 	defer input.Close()
 
-	instructions := ReadInstructions(input)
+	instructions := util.ReadFile(input)
 
 	end := FollowSimpleCourse(start, instructions)
 	product := end.distance * end.depth
@@ -32,40 +34,12 @@ func TestFollowAimedCourse(t *testing.T) {
 	}
 	defer input.Close()
 
-	instructions := ReadInstructions(input)
+	instructions := util.ReadFile(input)
 
 	end := FollowAimedCourse(start, instructions)
 	product := end.loc.distance * end.loc.depth
 	if product != 900 {
 		t.Errorf("Expected product of 900, got %d", product)
-	}
-}
-
-func TestReadInstructions(t *testing.T) {
-	sample, err := os.Open("sample")
-	if err != nil {
-		panic(err)
-	}
-	defer sample.Close()
-
-	expected := []string{
-		"forward 5",
-		"down 5",
-		"forward 8",
-		"up 3",
-		"down 8",
-		"forward 2",
-	}
-
-	actual := ReadInstructions(sample)
-
-	if len(actual) != len(expected) {
-		t.Fatalf("Array length differed, expected %d, actual %d)", len(expected), len(actual))
-	}
-	for i, entry := range expected {
-		if actual[i] != entry {
-			t.Errorf("Expected entry %s, got %s", expected, actual[i])
-		}
 	}
 }
 
