@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestFollowCourse(t *testing.T) {
+func TestFollowSimpleCourse(t *testing.T) {
 	start := Point{distance: 0, depth: 0}
 
 	input, err := os.Open("sample")
@@ -16,10 +16,28 @@ func TestFollowCourse(t *testing.T) {
 
 	instructions := ReadInstructions(input)
 
-	end := FollowCourse(start, instructions)
+	end := FollowSimpleCourse(start, instructions)
 	product := end.distance * end.depth
 	if product != 150 {
 		t.Errorf("Expected product of 150 , got %d", product)
+	}
+}
+
+func TestFollowAimedCourse(t *testing.T) {
+	start := Submarine{loc: Point{distance: 0, depth: 0}, aim: 0}
+
+	input, err := os.Open("sample")
+	if err != nil {
+		panic(err)
+	}
+	defer input.Close()
+
+	instructions := ReadInstructions(input)
+
+	end := FollowAimedCourse(start, instructions)
+	product := end.loc.distance * end.loc.depth
+	if product != 900 {
+		t.Errorf("Expected product of 900, got %d", product)
 	}
 }
 

@@ -14,6 +14,11 @@ type Point struct {
 	depth    int
 }
 
+type Submarine struct {
+	loc Point
+	aim int
+}
+
 type Instruction struct {
 	command string
 	amount  int
@@ -27,15 +32,15 @@ func main() {
 	}
 	defer file.Close()
 
-	start := Point{0, 0}
+	start := Submarine{Point{0, 0}, 0}
 
 	instructions := ReadInstructions(file)
-	end := FollowCourse(start, instructions)
+	end := FollowAimedCourse(start, instructions)
 
-	fmt.Printf("Product is %d", end.depth*end.distance)
+	fmt.Printf("Product is %d", end.loc.depth*end.loc.distance)
 }
 
-func FollowCourse(start Point, instructions []string) Point {
+func FollowSimpleCourse(start Point, instructions []string) Point {
 	end := start
 	for _, row := range instructions {
 		instruction := parseInstruction(row)
@@ -50,6 +55,23 @@ func FollowCourse(start Point, instructions []string) Point {
 	}
 
 	return end
+}
+
+func FollowAimedCourse(sub Submarine, instructions []string) Submarine {
+	for _, row := range instructions {
+		instruction := parseInstruction(row)
+		switch instruction.command {
+		case "up":
+			sub.aim -= instruction.amount
+		case "down":
+			sub.aim += instruction.amount
+		case "forward":
+			sub.loc.distance += instruction.amount
+			sub.loc.depth += sub.aim * instruction.amount
+		}
+	}
+
+	return sub
 }
 
 func parseInstruction(instruction string) Instruction {
