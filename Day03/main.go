@@ -26,6 +26,14 @@ func main() {
 	fmt.Printf("Epsilion %016b %d\n", epsilon, epsilon)
 	product := uint64(gamma) * uint64(epsilon)
 	fmt.Printf("Product is %d\n", product)
+
+	oxygen := CalculateOxygenRating(readings, bitLength)
+	co2 := CalculateCO2Rating(readings, bitLength)
+
+	fmt.Printf("Oxygen %016b %d\n", oxygen, oxygen)
+	fmt.Printf("CO2    %016b %d\n", co2, co2)
+	product = uint64(oxygen) * uint64(co2)
+	fmt.Printf("Product is %d\n", product)
 }
 
 func ParseContents(rows []string, readingBits int) []Reading {
@@ -56,6 +64,53 @@ func ReadGammaRate(readings []Reading, readingBits int) Reading {
 func CalculateEpsilon(gamma Reading, readingBits int) Reading {
 	mask := (Reading(1) << readingBits) - 1
 	return gamma ^ mask
+}
+
+func CalculateOxygenRating(readings []Reading, readingBits int) Reading {
+	for offset := readingBits - 1; offset >= 0; offset-- {
+		ones := CountOnesAtOffset(readings, offset)
+		if float32(ones) >= float32(len(readings))/2 {
+			readings, _ = splitByOffset(readings, offset)
+		} else {
+			_, readings = splitByOffset(readings, offset)
+		}
+		if len(readings) == 1 {
+			return readings[0]
+		}
+	}
+
+	return 0
+}
+
+func CalculateCO2Rating(readings []Reading, readingBits int) Reading {
+	for offset := readingBits - 1; offset >= 0; offset-- {
+		ones := CountOnesAtOffset(readings, offset)
+		if float32(ones) < float32(len(readings))/2 {
+			readings, _ = splitByOffset(readings, offset)
+		} else {
+			_, readings = splitByOffset(readings, offset)
+		}
+		if len(readings) == 1 {
+			return readings[0]
+		}
+	}
+
+	return 0
+}
+
+func splitByOffset(readings []Reading, offset int) ([]Reading, []Reading) {
+	mask := Reading(1) << offset
+	var ones []Reading
+	var zeros []Reading
+
+	for _, reading := range readings {
+		if mask&reading > 0 {
+			ones = append(ones, reading)
+		} else {
+			zeros = append(zeros, reading)
+		}
+	}
+	return ones, zeros
 }
 
 func CountOnesAtOffset(readings []Reading, offset int) int {

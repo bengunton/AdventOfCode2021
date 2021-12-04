@@ -67,3 +67,41 @@ func TestReadGammaRate(t *testing.T) {
 		t.Errorf("Gamma rate expected %d, actual %d", expected, actual)
 	}
 }
+
+func TestCalculateOxygenRating(t *testing.T) {
+	input, err := os.Open("sample")
+	if err != nil {
+		panic(err)
+	}
+	defer input.Close()
+
+	inputs := util.ReadFile(input)
+	bitLength := len(inputs[0])
+	readings := ParseContents(inputs, bitLength)
+
+	actual := CalculateOxygenRating(readings, bitLength)
+	expected := Reading(23)
+
+	if actual != expected {
+		t.Errorf("Oxygen rating expected %d, actual %d", expected, actual)
+	}
+}
+
+func TestCalculateCO2Rating(t *testing.T) {
+	input, err := os.Open("sample")
+	if err != nil {
+		panic(err)
+	}
+	defer input.Close()
+
+	inputs := util.ReadFile(input)
+	bitLength := len(inputs[0])
+	readings := ParseContents(inputs, bitLength)
+
+	actual := CalculateCO2Rating(readings, bitLength)
+	expected := Reading(10)
+
+	if actual != expected {
+		t.Errorf("Oxygen rating expected %d, actual %d", expected, actual)
+	}
+}
