@@ -70,6 +70,7 @@ func (c *BingoCard) checkWin() bool {
 		}
 
 		// columns
+		win = true
 		for _, row2 := range c.markings {
 			if !row2[i] {
 				win = false
