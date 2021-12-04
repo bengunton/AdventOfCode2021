@@ -15,7 +15,7 @@ func TestFollowCourse(t *testing.T) {
 	}
 	defer input.Close()
 
-	instructions := ReadInstructions()
+	instructions := ReadInstructions(input)
 
 	end := FollowCourse(start, instructions)
 	product := end.Width * end.Height
@@ -50,5 +50,15 @@ func TestReadInstructions(t *testing.T) {
 		if actual[i] != entry {
 			t.Errorf("Expected entry %s, got %s", expected, actual[i])
 		}
+	}
+}
+
+func TestParseInstruction(t *testing.T) {
+	actual := parseInstruction("down 5")
+	if actual.command != "down" {
+		t.Errorf("Failed to parse command")
+	}
+	if actual.amount != 5 {
+		t.Errorf("Failed to parse amount")
 	}
 }
