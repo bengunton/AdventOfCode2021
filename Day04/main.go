@@ -11,6 +11,7 @@ import (
 type BingoCard struct {
 	card     [5][5]int
 	markings [5][5]bool
+	won      bool
 }
 
 type BingoDraws []int
@@ -24,11 +25,16 @@ func main() {
 	draws := ParseBingoDraws(rows[0])
 	cards := ParseBingoCards(rows[1:])
 
-	card, i, last := Play(draws, cards)
+	/*
+		Part 1
+		card, i, last := Play(draws, cards)
+	*/
+	card, i, last := PlayForLast(draws, cards)
 
 	fmt.Printf("Winner is %d\n", i+1)
 	sum := card.sumUnmarked()
 	fmt.Printf("Sum is %d\n", sum)
+	fmt.Printf("Last is %d\n", last)
 	fmt.Printf("Last called * Sum = %d\n", last*sum)
 }
 
@@ -37,6 +43,24 @@ func Play(draws BingoDraws, cards []BingoCard) (BingoCard, int, int) {
 		for i, _ := range cards {
 			cards[i].mark(draw)
 			if cards[i].checkWin() {
+				return cards[i], i, draw
+			}
+		}
+	}
+
+	return BingoCard{}, -1, -1
+}
+
+func PlayForLast(draws BingoDraws, cards []BingoCard) (BingoCard, int, int) {
+	playersLeft := len(cards)
+	for _, draw := range draws {
+		for i, _ := range cards {
+			cards[i].mark(draw)
+			if cards[i].checkWin() && !cards[i].won {
+				cards[i].won = true
+				playersLeft--
+			}
+			if playersLeft == 0 {
 				return cards[i], i, draw
 			}
 		}
