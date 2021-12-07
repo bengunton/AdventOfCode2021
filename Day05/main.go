@@ -28,7 +28,7 @@ func main() {
 
 	grid := new(Grid)
 
-	DrawLinesSimple(lines, grid)
+	DrawLinesComplex(lines, grid)
 	count := grid.CountAtLeastTwos()
 	fmt.Printf("Squares with at least 2: %d", count)
 }
@@ -72,6 +72,38 @@ func DrawLinesSimple(lines []Line, g *Grid) {
 			} else {
 				for i := line.start.x; i >= line.end.x; i-- {
 					g[line.start.y][i]++
+				}
+			}
+		}
+	}
+}
+
+func DrawLinesComplex(lines []Line, g *Grid) {
+	DrawLinesSimple(lines, g)
+
+	for _, line := range lines {
+		if line.start.x == line.end.x || line.start.y == line.end.y {
+			continue
+		}
+
+		if line.start.x < line.end.x {
+			if line.start.y < line.end.y {
+				for i := 0; i <= line.end.x-line.start.x; i++ {
+					g[line.start.y+i][line.start.x+i]++
+				}
+			} else {
+				for i := 0; i <= line.end.x-line.start.x; i++ {
+					g[line.start.y-i][line.start.x+i]++
+				}
+			}
+		} else {
+			if line.start.y < line.end.y {
+				for i := 0; i <= line.start.x-line.end.x; i++ {
+					g[line.start.y+i][line.start.x-i]++
+				}
+			} else {
+				for i := 0; i <= line.start.x-line.end.x; i++ {
+					g[line.start.y-i][line.start.x-i]++
 				}
 			}
 		}
