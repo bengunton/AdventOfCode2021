@@ -8,15 +8,26 @@ import (
 	"github.com/bengunton/AdventOfCode2021/util"
 )
 
-const DAYS = 80
+const DAYS = 256
 
 func main() {
 	rows := util.ReadFileArg()
 	fish := ParseFish(rows[0])
 	fmt.Printf("%v\n", fish)
 
-	fish = Simulate(fish, 80)
-	fmt.Println("Number of fish is", len(fish))
+	// fish = Simulate(fish, DAYS)
+	sum := SimulateEfficient(fish, DAYS)
+	fmt.Println("Number of fish is", sum)
+}
+
+func SimulateEfficient(fishies []LanternFish, days int) int {
+	tank := FillFishTank(fishies)
+
+	for i := 0; i < days; i++ {
+		tank.Age()
+	}
+
+	return tank.Count()
 }
 
 func Simulate(fishies []LanternFish, days int) []LanternFish {
@@ -48,4 +59,14 @@ func ParseFish(input string) []LanternFish {
 		fishes = append(fishes, LanternFish(fish))
 	}
 	return fishes
+}
+
+func FillFishTank(fishies []LanternFish) FishTank {
+	var tank FishTank
+
+	for _, fish := range fishies {
+		tank[fish]++
+	}
+
+	return tank
 }
